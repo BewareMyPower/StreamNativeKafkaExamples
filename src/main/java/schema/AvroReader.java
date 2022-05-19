@@ -16,11 +16,15 @@ public class AvroReader<T> {
     }
 
     public T read(byte[] bytes) throws IOException {
+        return read(bytes, 0, bytes.length);
+    }
+
+    public T read(byte[] bytes, int start, int length) throws IOException {
         var decoderCache = AvroReader.decoder.get();
-        var decoder = DecoderFactory.get().binaryDecoder(bytes, decoderCache);
+        var decoder = DecoderFactory.get().binaryDecoder(bytes, start, length, decoderCache);
         if (decoderCache == null) {
             AvroReader.decoder.set(decoder);
         }
-        return reader.read(null, DecoderFactory.get().binaryDecoder(bytes, decoder));
+        return reader.read(null, DecoderFactory.get().binaryDecoder(bytes, start, length, decoder));
     }
 }
