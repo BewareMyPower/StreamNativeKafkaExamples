@@ -13,6 +13,8 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 
@@ -27,6 +29,15 @@ public class TransactionUtils {
             admin.createTopics(Collections.singleton(new NewTopic(topic, numPartitions, (short) 1))).all().get();
         } catch (InterruptedException | ExecutionException e) {
             log.warn("Failed to create {}: {}", topic, e.getMessage());
+        }
+    }
+
+    public static void deleteTopic(final String topic) {
+        @Cleanup final var admin = createAdmin();
+        try {
+            admin.deleteTopics(Collections.singleton(topic)).all().get();
+        } catch (InterruptedException | ExecutionException e) {
+            log.warn("Failed to delete {}: {}", topic, e.getMessage());
         }
     }
 
@@ -50,6 +61,19 @@ public class TransactionUtils {
         } else {
             return new KafkaProducer<>(props);
         }
+    }
+
+    public static RecordMetadata send(final KafkaProducer<String, String> producer,
+                                      final String topic,
+                                      final String value) throws ExecutionException, InterruptedException {
+        return send(producer, topic, 0, value);
+    }
+
+    public static RecordMetadata send(final KafkaProducer<String, String> producer,
+                                      final String topic,
+                                      final int partition,
+                                      final String value) throws ExecutionException, InterruptedException {
+        return producer.send(new ProducerRecord<>(topic, partition, null, value)).get();
     }
 
     public static KafkaConsumer<String, String> createConsumer(final String topic) {

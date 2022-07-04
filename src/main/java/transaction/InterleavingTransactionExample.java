@@ -6,7 +6,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.producer.ProducerRecord;
 
 @Slf4j
 public class InterleavingTransactionExample {
@@ -23,20 +22,20 @@ public class InterleavingTransactionExample {
 
             try {
                 producer1.beginTransaction();
-                producer1.send(new ProducerRecord<>(TOPIC, 0, null, "X1: M1-p0")).get();
+                TransactionUtils.send(producer1, TOPIC, 0, "X1: M1-p0");
                 producer2.beginTransaction();
-                producer2.send(new ProducerRecord<>(TOPIC, 0, null, "X2: M1-p0")).get();
-                producer1.send(new ProducerRecord<>(TOPIC, 0, null, "X1: M2-p0")).get();
-                producer1.send(new ProducerRecord<>(TOPIC, 0, null, "X1: M3-p0")).get();
-                producer2.send(new ProducerRecord<>(TOPIC, 1, null, "X2: M2-p1")).get();
-                producer1.send(new ProducerRecord<>(TOPIC, 1, null, "X1: M4-p1")).get();
-                producer3.send(new ProducerRecord<>(TOPIC, 0, null, "Mx-p0")).get();
-                producer2.send(new ProducerRecord<>(TOPIC, 1, null, "X2: M3-p1")).get();
-                producer3.send(new ProducerRecord<>(TOPIC, 1, null, "My-p1")).get();
-                producer2.send(new ProducerRecord<>(TOPIC, 0, null, "X2: M4-p0")).get();
+                TransactionUtils.send(producer2, TOPIC, 0, "X2: M1-p0");
+                TransactionUtils.send(producer1, TOPIC, 0, "X1: M2-p0");
+                TransactionUtils.send(producer1, TOPIC, 0, "X1: M3-p0");
+                TransactionUtils.send(producer2, TOPIC, 1, "X2: M2-p1");
+                TransactionUtils.send(producer1, TOPIC, 1, "X1: M4-p1");
+                TransactionUtils.send(producer3, TOPIC, 0, "Mx-p0");
+                TransactionUtils.send(producer2, TOPIC, 1, "X2: M3-p1");
+                TransactionUtils.send(producer3, TOPIC, 1, "My-p1");
+                TransactionUtils.send(producer2, TOPIC, 0, "X2: M4-p0");
                 producer2.commitTransaction();
-                producer1.send(new ProducerRecord<>(TOPIC, 0, null, "X1: M5-p0")).get();
-                producer1.send(new ProducerRecord<>(TOPIC, 1, null, "X1: M6-p1")).get();
+                TransactionUtils.send(producer1, TOPIC, 0, "X1: M5-p0");
+                TransactionUtils.send(producer1, TOPIC, 1, "X1: M6-p1");
                 producer1.commitTransaction();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -47,8 +46,8 @@ public class InterleavingTransactionExample {
             for (int i = 0; i < 12; ) {
                 final var records = consumer.poll(Duration.ofSeconds(1));
                 i += records.count();
-                records.forEach(record -> log.info("Received {} from {}-{}@{}",
-                        record.value(), record.topic(), record.partition(), record.offset()));
+                records.forEach(record -> System.out.println("Received " + record.value() + " from " + record.topic()
+                        + "-" + record.partition() + "@" + record.offset()));
             }
         });
         future1.get();
