@@ -23,12 +23,14 @@ public class TransactionUtils {
 
     public static final String BOOTSTRAP_SERVERS = "localhost:9092";
 
-    public static void createTopic(final String topic, final int numPartitions) {
+    public static boolean createTopic(final String topic, final int numPartitions) {
         @Cleanup final var admin = createAdmin();
         try {
             admin.createTopics(Collections.singleton(new NewTopic(topic, numPartitions, (short) 1))).all().get();
+            return true;
         } catch (InterruptedException | ExecutionException e) {
             log.warn("Failed to create {}: {}", topic, e.getMessage());
+            return false;
         }
     }
 
