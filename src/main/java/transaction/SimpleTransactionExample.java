@@ -15,7 +15,6 @@ public class SimpleTransactionExample {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         TransactionUtils.createTopic(TOPIC, 2);
         @Cleanup var producer = TransactionUtils.createProducer("my-txn");
-        producer.initTransactions();
         producer.beginTransaction();
 
         var metadata = producer.send(new ProducerRecord<>(TOPIC, 0, null, "M1")).get();
