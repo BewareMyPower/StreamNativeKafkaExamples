@@ -36,4 +36,9 @@ public class KafkaAvroSerializer implements Serializer<Object> {
         }
     }
 
+    @Override
+    public void close() {
+        // No ops
+    }
+
 }

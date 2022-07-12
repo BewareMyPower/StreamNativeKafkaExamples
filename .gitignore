@@ -4,3 +4,6 @@ target/
 # Intellij idea
 .idea/
 *.iml
+
+# Avro generated classes
+./src/main/java/example/avro

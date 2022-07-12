@@ -38,6 +38,11 @@ public class KafkaAvroDeserializer implements Deserializer<Object> {
         }
     }
 
+    @Override
+    public void close() {
+        // No ops
+    }
+
     private Long getSchemaVersion(final ByteBuffer buffer) {
         if (buffer.remaining() < KafkaAvroConfigs.HEADER_SIZE) {
             return null;
