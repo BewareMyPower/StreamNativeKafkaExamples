@@ -6,4 +6,4 @@ target/
 *.iml
 
 # Avro generated classes
-./src/main/java/example/avro
+src/main/java/example/avro
