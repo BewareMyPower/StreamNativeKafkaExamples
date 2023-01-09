@@ -1,4 +1,4 @@
-package schema;
+package experimental.schema;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -28,9 +28,9 @@ import org.apache.pulsar.common.policies.data.SchemaCompatibilityStrategy;
 import org.apache.pulsar.common.schema.SchemaInfoWithVersion;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import schema.serializers.KafkaAvroConfigs;
-import schema.serializers.KafkaAvroDeserializer;
-import schema.serializers.KafkaAvroSerializer;
+import experimental.schema.serializers.KafkaAvroConfigs;
+import experimental.schema.serializers.KafkaAvroDeserializer;
+import experimental.schema.serializers.KafkaAvroSerializer;
 
 @Slf4j
 public class KafkaAvroTest {
@@ -72,13 +72,13 @@ public class KafkaAvroTest {
         });
         Assert.assertEquals(valueList, Collections.singletonList(new V1Data(1)));
         validateSchema(admin, topic, "{\"type\":\"record\",\"name\":\"V1Data\",\"namespace\":"
-                + "\"schema.KafkaAvroTest\",\"fields\":[{\"name\":\"i\",\"type\":\"int\"}]}", 0);
+                + "\"experimental.schema.KafkaAvroTest\",\"fields\":[{\"name\":\"i\",\"type\":\"int\"}]}", 0);
 
         final KafkaProducer<String, V2Data> producer2 = new KafkaProducer<>(newAvroProducerProps());
         producer2.send(new ProducerRecord<>(topic, new V2Data(2, "A")));
         producer2.send(new ProducerRecord<>(topic, new V2Data(3, "B")));
         validateSchema(admin, topic, "{\"type\":\"record\",\"name\":\"V2Data\",\"namespace\":"
-                + "\"schema.KafkaAvroTest\",\"fields\":[{\"name\":\"i\",\"type\":\"int\"},{\"name\":\"s\","
+                + "\"experimental.schema.KafkaAvroTest\",\"fields\":[{\"name\":\"i\",\"type\":\"int\"},{\"name\":\"s\","
                 + "\"type\":[\"null\",\"string\"],\"default\":null}]}", 1);
 
         valueList.clear();

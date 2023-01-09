@@ -1,4 +1,4 @@
-package schema.serializers;
+package experimental.schema.serializers;
 
 import java.util.Map;
 import org.apache.avro.reflect.ReflectData;

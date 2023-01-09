@@ -1,4 +1,4 @@
-package schema;
+package experimental.schema;
 
 import java.io.IOException;
 import org.apache.avro.Schema;

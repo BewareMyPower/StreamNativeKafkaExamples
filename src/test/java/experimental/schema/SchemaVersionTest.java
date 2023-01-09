@@ -1,8 +1,8 @@
-package schema;
+package experimental.schema;
 
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import schema.serializers.SchemaVersion;
+import experimental.schema.serializers.SchemaVersion;
 
 import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;

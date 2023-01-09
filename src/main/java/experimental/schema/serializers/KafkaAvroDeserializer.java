@@ -1,4 +1,4 @@
-package schema.serializers;
+package experimental.schema.serializers;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -9,7 +9,7 @@ import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.kafka.common.errors.SerializationException;
 import org.apache.kafka.common.serialization.Deserializer;
-import schema.AvroReader;
+import experimental.schema.AvroReader;
 
 public class KafkaAvroDeserializer implements Deserializer<Object> {
 

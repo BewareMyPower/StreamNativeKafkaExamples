@@ -1,4 +1,4 @@
-package schema;
+package experimental.schema;
 
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
 import java.util.Properties;
@@ -12,7 +12,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.IntegerSerializer;
-import schema.serializers.KafkaAvroConfigs;
+import experimental.schema.serializers.KafkaAvroConfigs;
 
 public class ConfluentAvroSchemaExample {
 

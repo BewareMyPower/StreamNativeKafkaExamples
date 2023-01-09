@@ -1,11 +1,11 @@
-package schema.serializers;
+package experimental.schema.serializers;
 
 import java.io.IOException;
 import java.util.Map;
 import org.apache.avro.Schema;
 import org.apache.avro.specific.SpecificData;
 import org.apache.kafka.common.serialization.Serializer;
-import schema.AvroWriter;
+import experimental.schema.AvroWriter;
 
 public class KafkaAvroSerializer implements Serializer<Object> {
 

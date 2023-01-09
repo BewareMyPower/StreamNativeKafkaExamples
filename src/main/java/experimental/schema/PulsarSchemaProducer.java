@@ -1,4 +1,4 @@
-package schema;
+package experimental.schema;
 
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;

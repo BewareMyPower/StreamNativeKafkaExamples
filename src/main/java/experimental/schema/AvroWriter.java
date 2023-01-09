@@ -1,4 +1,4 @@
-package schema;
+package experimental.schema;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

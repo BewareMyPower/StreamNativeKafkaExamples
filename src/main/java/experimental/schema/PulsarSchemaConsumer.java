@@ -1,4 +1,4 @@
-package schema;
+package experimental.schema;
 
 import java.util.concurrent.TimeUnit;
 import org.apache.pulsar.client.api.PulsarClient;

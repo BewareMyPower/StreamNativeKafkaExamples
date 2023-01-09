@@ -1,4 +1,4 @@
-package schema;
+package experimental.schema;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
