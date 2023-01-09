@@ -11,43 +11,49 @@
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
     <maven.compiler.target>17</maven.compiler.target>
+    <pulsar.version>2.10.2</pulsar.version>
+    <streamnative.version>2.10.2.4</streamnative.version>
+    <kafka.version>3.3.1</kafka.version>
+    <confluent.version>3.3.1</confluent.version>
+    <avro.version>1.11.0</avro.version>
+    <testng.version>7.3.0</testng.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.apache.kafka</groupId>
       <artifactId>kafka-clients</artifactId>
-      <version>3.1.0</version>
+      <version>${kafka.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.confluent</groupId>
       <artifactId>kafka-avro-serializer</artifactId>
-      <version>7.1.0</version>
+      <version>${confluent.version}</version>
     </dependency>
 
     <dependency>
       <groupId>io.streamnative.pulsar.handlers</groupId>
       <artifactId>oauth-client</artifactId>
-      <version>2.11.0-SNAPSHOT</version>
+      <version>${streamnative.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.pulsar</groupId>
       <artifactId>pulsar-client</artifactId>
-      <version>2.10.0</version>
+      <version>${pulsar.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.pulsar</groupId>
       <artifactId>pulsar-client-admin</artifactId>
-      <version>2.10.0</version>
+      <version>${pulsar.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.apache.avro</groupId>
       <artifactId>avro</artifactId>
-      <version>1.11.0</version>
+      <version>${avro.version}</version>
     </dependency>
 
     <dependency>
@@ -60,7 +66,7 @@
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
-      <version>7.3.0</version>
+      <version>${testng.version}</version>
       <scope>test</scope>
     </dependency>
 
@@ -104,7 +110,7 @@
       <plugin>
         <groupId>org.apache.avro</groupId>
         <artifactId>avro-maven-plugin</artifactId>
-        <version>1.11.0</version>
+        <version>${avro.version}</version>
         <executions>
           <execution>
             <phase>generate-sources</phase>
