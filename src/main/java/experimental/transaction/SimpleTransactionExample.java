@@ -5,7 +5,11 @@ import java.util.Collections;
 import java.util.concurrent.ExecutionException;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 
 @Slf4j
 public class SimpleTransactionExample {
@@ -14,10 +18,10 @@ public class SimpleTransactionExample {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         TransactionUtils.createTopic(TOPIC, 2);
-        @Cleanup var producer = TransactionUtils.createProducer("my-txn");
+        @Cleanup KafkaProducer<String, String> producer = TransactionUtils.createProducer("my-txn");
         producer.beginTransaction();
 
-        var metadata = producer.send(new ProducerRecord<>(TOPIC, 0, null, "M1")).get();
+        RecordMetadata metadata = producer.send(new ProducerRecord<>(TOPIC, 0, null, "M1")).get();
         System.out.println("sent M1 to " + metadata);
         metadata = producer.send(new ProducerRecord<>(TOPIC, 1, null, "M2")).get();
         System.out.println("sent M2 to " + metadata);
@@ -34,10 +38,10 @@ public class SimpleTransactionExample {
     }
 
     private static void consumeMessages(String group, boolean readCommitted) {
-        @Cleanup final var consumer = TransactionUtils.createConsumer(TOPIC, readCommitted);
+        @Cleanup final KafkaConsumer<String, String> consumer = TransactionUtils.createConsumer(TOPIC, readCommitted);
         consumer.subscribe(Collections.singleton(TOPIC));
         while (true) {
-            var records = consumer.poll(Duration.ofMillis(1500));
+            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1500));
             if (records.isEmpty()) {
                 break;
             }

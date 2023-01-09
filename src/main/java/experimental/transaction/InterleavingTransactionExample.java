@@ -4,6 +4,9 @@ import java.time.Duration;
 import java.util.concurrent.ExecutionException;
 import lombok.Cleanup;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.clients.consumer.ConsumerRecords;
+import org.apache.kafka.clients.consumer.KafkaConsumer;
+import org.apache.kafka.clients.producer.KafkaProducer;
 
 @Slf4j
 public class InterleavingTransactionExample {
@@ -12,7 +15,7 @@ public class InterleavingTransactionExample {
 
     public static void main(String[] args) throws ExecutionException, InterruptedException {
         TransactionUtils.deleteTopic(TOPIC);
-        final var maxRetryCount = 10;
+        final int maxRetryCount = 10;
         for (int i = 0; i < maxRetryCount; i++) {
             if (TransactionUtils.createTopic(TOPIC, 2)) {
                 break;
@@ -22,9 +25,9 @@ public class InterleavingTransactionExample {
             }
             Thread.sleep(100); // wait until the topic is actually deleted
         }
-        @Cleanup final var producer1 = TransactionUtils.createProducer("X1");
-        @Cleanup final var producer2 = TransactionUtils.createProducer("X2");
-        @Cleanup final var producer3 = TransactionUtils.createProducer(null);
+        @Cleanup final KafkaProducer<String, String> producer1 = TransactionUtils.createProducer("X1");
+        @Cleanup final KafkaProducer<String, String> producer2 = TransactionUtils.createProducer("X2");
+        @Cleanup final KafkaProducer<String, String> producer3 = TransactionUtils.createProducer(null);
 
         try {
             producer1.beginTransaction();
@@ -46,9 +49,9 @@ public class InterleavingTransactionExample {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        @Cleanup final var consumer = TransactionUtils.createConsumer(TOPIC);
+        @Cleanup final KafkaConsumer<String, String> consumer = TransactionUtils.createConsumer(TOPIC);
         for (int i = 0; i < 12; ) {
-            final var records = consumer.poll(Duration.ofSeconds(1));
+            final ConsumerRecords<String, String> records = consumer.poll(Duration.ofSeconds(1));
             i += records.count();
             records.forEach(record -> System.out.println("Received " + record.value() + " from " + record.topic()
                     + "-" + record.partition() + "@" + record.offset()));

@@ -20,8 +20,8 @@ public class AvroReader<T> {
     }
 
     public T read(byte[] bytes, int start, int length) throws IOException {
-        var decoderCache = AvroReader.decoder.get();
-        var decoder = DecoderFactory.get().binaryDecoder(bytes, start, length, decoderCache);
+        BinaryDecoder decoderCache = AvroReader.decoder.get();
+        BinaryDecoder decoder = DecoderFactory.get().binaryDecoder(bytes, start, length, decoderCache);
         if (decoderCache == null) {
             AvroReader.decoder.set(decoder);
         }

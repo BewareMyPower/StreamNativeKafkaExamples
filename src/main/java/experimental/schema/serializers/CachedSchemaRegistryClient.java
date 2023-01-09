@@ -1,4 +1,4 @@
-package schema.serializers;
+package experimental.schema.serializers;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;

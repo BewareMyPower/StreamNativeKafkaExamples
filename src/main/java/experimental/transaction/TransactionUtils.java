@@ -24,7 +24,7 @@ public class TransactionUtils {
     public static final String BOOTSTRAP_SERVERS = "localhost:9092";
 
     public static boolean createTopic(final String topic, final int numPartitions) {
-        @Cleanup final var admin = createAdmin();
+        @Cleanup final AdminClient admin = createAdmin();
         try {
             admin.createTopics(Collections.singleton(new NewTopic(topic, numPartitions, (short) 1))).all().get();
             return true;
@@ -35,7 +35,7 @@ public class TransactionUtils {
     }
 
     public static void deleteTopic(final String topic) {
-        @Cleanup final var admin = createAdmin();
+        @Cleanup final AdminClient admin = createAdmin();
         try {
             admin.deleteTopics(Collections.singleton(topic)).all().get();
         } catch (InterruptedException | ExecutionException e) {
@@ -44,20 +44,20 @@ public class TransactionUtils {
     }
 
     public static AdminClient createAdmin() {
-        final var props = new Properties();
+        final Properties props = new Properties();
         props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         return AdminClient.create(props);
     }
 
     public static KafkaProducer<String, String> createProducer(@Nullable final String txnId) {
-        final var props = new Properties();
+        final Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         if (txnId != null) {
             props.put(ProducerConfig.ENABLE_IDEMPOTENCE_CONFIG, true);
             props.put(ProducerConfig.TRANSACTIONAL_ID_CONFIG, txnId);
-            final var producer = new KafkaProducer<String, String>(props);
+            final KafkaProducer<String, String> producer = new KafkaProducer<>(props);
             producer.initTransactions();
             return producer;
         } else {
@@ -83,7 +83,7 @@ public class TransactionUtils {
     }
 
     public static KafkaConsumer<String, String> createConsumer(final String topic, boolean readCommitted) {
-        final var props = new Properties();
+        final Properties props = new Properties();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
         props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
@@ -94,7 +94,7 @@ public class TransactionUtils {
         } else {
             props.put(ConsumerConfig.ISOLATION_LEVEL_CONFIG, "read_uncommitted");
         }
-        final var consumer = new KafkaConsumer<String, String>(props);
+        final KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
         consumer.subscribe(Collections.singleton(topic));
         return consumer;
     }
