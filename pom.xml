@@ -14,7 +14,7 @@
     <pulsar.version>2.10.2</pulsar.version>
     <streamnative.version>2.10.2.4</streamnative.version>
     <kafka.version>3.3.1</kafka.version>
-    <confluent.version>3.3.1</confluent.version>
+    <confluent.version>7.3.1</confluent.version>
     <avro.version>1.11.0</avro.version>
     <testng.version>7.3.0</testng.version>
   </properties>
