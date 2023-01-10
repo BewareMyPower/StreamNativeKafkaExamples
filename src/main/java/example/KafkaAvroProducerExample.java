@@ -22,7 +22,7 @@ public class KafkaAvroProducerExample {
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
         props.put(KafkaAvroSerializerConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8001");
 
-        final String topic = "my-kafka-avro-topic";
+        final String topic = "my-avro-kafka-topic";
         @Cleanup final KafkaProducer<String, User1> producer = new KafkaProducer<>(props);
         RecordMetadata metadata = producer.send(new ProducerRecord<>(topic, new User1("alice", 10))).get();
         System.out.println("Sent to " + metadata);
